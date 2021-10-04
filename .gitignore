@@ -1,0 +1,10 @@
+# Ignoruje soukromé nastavení
+PrivateConfiguration.properties
+
+# Testovací soubory
+pages2.csv
+taxa2.csv
+syntaxa2.csv
+
+# Výsledky testů
+Pladias_tests*

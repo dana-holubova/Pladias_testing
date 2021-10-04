@@ -12,32 +12,35 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
 import com.opencsv.*;
+import dataProviders.*;
 
 import static org.junit.Assert.*;
 
 public class PladiasTest {
 
+    //deklarace a inicializace čtečky souboru properties (confings/Configuration.properties)
+    static ConfigFileReader configFileReader = new ConfigFileReader() ;
+    static PrivateConfigFileReader privateConfigFileReader = new PrivateConfigFileReader();
     //aktuální datum
     static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     static DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     static DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-    //  String baseUrl = "http://192.168.3.241:9007/";
     static LocalDateTime now = LocalDateTime.now();
     //základní složka pro ukládání testů
-    static String dirPath = "C:\\Java-Training\\Projects\\Pladias_testing\\Pladias_tests" + "_" + dtf.format(now) + "\\";
+    static String dirPath = configFileReader.getTestsDirPath() + "_" + dtf.format(now) + "\\";
     //nastaveni pro vsechny testy obecne
     //deklarace ovladace, ktery ovlada prohlizec
     private static WebDriver driver;
     ChromeOptions MyChromeOptions;
     //zakladni adresa
-    String baseUrl = "https://pladias.cz/";
+    String baseUrl = configFileReader.getApplicationUrl();
     //základní složka pro stahování
-    String downloadPath = "C:\\Java-Training\\Projects\\Pladias_testing\\selenium_downloads\\";
+    String downloadPath = configFileReader.getdownloadDirPath();
 
     @BeforeClass
     //nastaveni cesty k Chrome driver
     public static void setUp() {
-        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", configFileReader.getDriverPath());
     }
 
     @BeforeClass
@@ -61,23 +64,6 @@ public class PladiasTest {
         }
     }
 
-//    @BeforeClass
-//    public static void pladiasLogin() {
-//        //přihlášení se do černého Pladiasu
-//        driver.get("https://pladias.ibot.cas.cz/login");
-//        driver.findElement(By.id("inputEmail")).sendKeys("danmich@sci.muni.cz");
-//        driver.findElement(By.id("inputPassword")).sendKeys("qwe753");
-//        driver.findElement(By.xpath("//button[@type='submit']")).click();
-//        System.out.println();
-//        System.out.println("černý Pladias was logged: " + driver.getCurrentUrl());
-//        System.out.println();
-//
-//        try {
-//            driver.findElement(By.xpath("//*[text()='danmich@sci.muni.cz']"));
-//        } catch (NoSuchElementException e) {
-//            System.out.println("danmich@sci.muni.cz not logged");
-//        }
-//    }
 
     @AfterClass
     public static void tearDown() {
@@ -142,8 +128,8 @@ public class PladiasTest {
         //přihlášení se do černého Pladiasu
         driver.get("https://pladias.ibot.cas.cz/login");
         driver.findElement(By.id("inputEmail"));
-        driver.findElement(By.id("inputEmail")).sendKeys("danmich@sci.muni.cz");
-        driver.findElement(By.id("inputPassword")).sendKeys("qwe753");
+        driver.findElement(By.id("inputEmail")).sendKeys(privateConfigFileReader.getPladiasLogin());
+        driver.findElement(By.id("inputPassword")).sendKeys(privateConfigFileReader.getPladiasPassword());
         driver.findElement(By.xpath("//button[@type='submit']")).click();
         System.out.println();
         System.out.println("černý Pladias was logged: " + driver.getCurrentUrl());
